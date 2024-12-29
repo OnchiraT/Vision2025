@@ -1,3 +1,16 @@
-cd backend
-npm init -y
-npm install express dotenv cors openai
+{
+  "name": "vision2025",
+  "version": "1.0.0",
+  "description": "Vision 2025 Enhancement App",
+  "main": "index.js",
+  "scripts": {
+    "start": "netlify dev"
+  },
+  "dependencies": {
+    "@netlify/functions": "^2.0.0",
+    "openai": "^4.0.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^12.0.0"
+  }
+}
