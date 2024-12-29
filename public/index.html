@@ -1,69 +1,101 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vision Board Creator</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Vision 2025 Enhancement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            background-color: #f8f9fa;
+            min-height: 100px;
+        }
+        .loading {
+            display: none;
+            margin: 20px 0;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <div class="form-container">
-            <h2>สร้าง Vision Board ของคุณ</h2>
-            <form id="visionForm">
-                <div class="form-group">
-                    <label for="category">หมวดหมู่:</label>
-                    <select id="category" required>
-                        <option value="career">อาชีพการงาน</option>
-                        <option value="health">สุขภาพ</option>
-                        <option value="personal">การพัฒนาตนเอง</option>
-                        <option value="financial">การเงิน</option>
-                        <option value="relationship">ความสัมพันธ์</option>
-                        <option value="giving">การให้</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="goalTitle">เป้าหมาย:</label>
-                    <input type="text" id="goalTitle" required>
-                </div>
-                <div class="form-group">
-                    <label for="whatIsYourGoal">ฉันจะ:</label>
-                    <input type="text" id="whatIsYourGoal" required>
-                </div>
-                <div class="form-group">
-                    <label for="strongWhy">เพราะ:</label>
-                    <input type="text" id="strongWhy" required>
-                </div>
-                <div class="form-group">
-                    <label for="clearWhen">เมื่อไหร่:</label>
-                    <input type="text" id="clearWhen" required>
-                </div>
-                <div class="form-group">
-                    <label for="resources">ต้องการ:</label>
-                    <input type="text" id="resources" required>
-                </div>
-                <div class="form-group">
-                    <label for="whatToDo">ต้องทำ:</label>
-                    <input type="text" id="whatToDo" required>
-                </div>
-                <button type="submit">เพิ่มเป้าหมาย</button>
-            </form>
-        </div>
-
-        <div class="vision-board-container">
-            <h2>Vision Board ของฉัน</h2>
-            <div id="visionBoard" class="vision-board"></div>
-            <div class="board-controls">
-                <button onclick="printVisionBoard()">พิมพ์ Vision Board</button>
-                <button onclick="clearVisionBoard()">ล้าง Vision Board</button>
-            </div>
-        </div>
+        <h1>Vision 2025 Enhancement</h1>
+        <textarea id="input-text" placeholder="Enter your vision statement here..."></textarea>
+        <button onclick="enhanceText()">Enhance Text</button>
+        <div id="loading" class="loading">Processing...</div>
+        <div id="result"></div>
     </div>
 
-    <div id="printArea" class="print-area">
-        <div id="printVisionBoard" class="vision-board"></div>
-    </div>
+    <script>
+        async function enhanceText() {
+            const inputText = document.getElementById('input-text').value;
+            const loadingDiv = document.getElementById('loading');
+            const resultDiv = document.getElementById('result');
 
-    <script src="script.js"></script>
+            if (!inputText.trim()) {
+                alert('Please enter some text first');
+                return;
+            }
+
+            loadingDiv.style.display = 'block';
+            resultDiv.textContent = '';
+
+            try {
+                const response = await fetch('/.netlify/functions/enhance-text', {
+                    method: 'POST',
+                    body: JSON.stringify({ text: inputText }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                resultDiv.textContent = data.enhanced;
+            } catch (error) {
+                console.error('Error:', error);
+                resultDiv.textContent = 'Error: Could not enhance text. Please try again.';
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
